@@ -213,9 +213,6 @@ async function RemoveItem(panier) {
 			// --- Search item element
 			panier = panier.filter(elementFilter => elementFilter.id !== id || elementFilter.color !== color)
 
-			// --- Delete element
-			element.remove()
-
 			// --- Update item panier
 			localStorage.setItem('productList', JSON.stringify(panier))
 
@@ -237,6 +234,9 @@ async function RemoveItem(panier) {
 			// --- Add total
 			let itemTotal = document.getElementById('totalPrice')
 			itemTotal.innerText = amount
+
+			// --- Delete element
+			element.remove()
 		})
 	})
 }
