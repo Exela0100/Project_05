@@ -149,9 +149,10 @@ async function UpdateQuantity(panier) {
 		let color = element.dataset.color
 
 		// --- Event change quantity
-		elem.addEventListener('change', () => {
+		elem.addEventListener('change', async () => {
 			// --- Variables
 			let amount = 0
+			let quantity = 0
 			let indexElem = panier.findIndex(elemI => elemI.id === id && elemI.color === color)
 
 			// --- Check element quantity
@@ -167,6 +168,7 @@ async function UpdateQuantity(panier) {
 
 				// --- Update panier
 				panier[indexElem].quantity = elem.valueAsNumber
+				//quantity = elem.valueAsNumber
 
 				// --- Save new quantity
 				localStorage.setItem('productList', JSON.stringify(panier))
@@ -185,7 +187,14 @@ async function UpdateQuantity(panier) {
 						amount += (productBack.price * item.quantity)
 					}
 				}
+
+				// --- Update quantity
+				quantity += parseInt(item.quantity)
 			}
+
+			// --- Add quantity
+			let itemQuantity = document.getElementById('totalQuantity')
+			itemQuantity.innerText = quantity
 
 			// --- Add total
 			let itemTotal = document.getElementById('totalPrice')
@@ -207,9 +216,10 @@ async function RemoveItem(panier) {
 		let id = element.dataset.id
 		let color = element.dataset.color
 		let amount = 0
+		let quantity = 0
 
 		// --- Event click remove
-		elem.addEventListener('click', () => {
+		elem.addEventListener('click', async () => {
 			// --- Search item element
 			panier = panier.filter(elementFilter => elementFilter.id !== id || elementFilter.color !== color)
 
@@ -227,13 +237,24 @@ async function RemoveItem(panier) {
 					if(productBack._id === item.id) {
 						// --- Update total amount
 						amount += (productBack.price * item.quantity)
+						console.log(item)
 					}
 				}
+
+				// --- Update quantity
+				quantity += parseInt(item.quantity)
 			}
+
+			// --- Add quantity
+			let itemQuantity = document.getElementById('totalQuantity')
+			itemQuantity.innerText = quantity
 
 			// --- Add total
 			let itemTotal = document.getElementById('totalPrice')
 			itemTotal.innerText = amount
+
+			// --- Update quantity
+			await UpdateQuantity(panier)
 
 			// --- Delete element
 			element.remove()
